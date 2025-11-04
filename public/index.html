@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 헬스코치 v0.6 Pro</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>🏋️‍♂️ AI 헬스코치 <span class="ver">v0.6 Pro</span></h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>맞춤 루틴 추천</h2>
+
+      <form id="userForm">
+        <div class="input-group">
+          <label>키(cm):</label>
+          <input type="number" id="height" required />
+          <label>몸무게(kg):</label>
+          <input type="number" id="weight" required />
+        </div>
+
+        <div class="input-group">
+          <label>목표:</label>
+          <select id="goal">
+            <option value="감량">감량</option>
+            <option value="유지">유지</option>
+            <option value="증량">증량</option>
+          </select>
+
+          <label>기간(주):</label>
+          <input type="number" id="duration" required />
+        </div>
+
+        <button type="submit">AI 루틴 추천받기 & 코칭 시작</button>
+      </form>
+
+      <div id="resultArea"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>🤖 GPT-5 기반 AI 트레이너가 분석 중입니다...</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
