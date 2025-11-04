@@ -1,17 +1,38 @@
-// ✅ server.js - 안정형 (GPT-4o-mini 기반)
+// ✅ server.js - Render 배포 안정형 (AI 헬스코치 v0.6-secure)
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
-const app = express();
-const PORT = 3000;
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ✅ 경로 유틸 (ESM 환경에서 __dirname 대체)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ 미들웨어
 app.use(cors());
 app.use(express.json());
-app.use(express.static(".")); // index.html 접근 허용
 
+// ✅ public 폴더를 정적 파일로 제공
+app.use(express.static(path.join(__dirname, "public")));
+
+// ✅ 루트 경로(index.html) 응답
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ✅ Health Check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", server: "AI Coach v0.6-secure" });
+});
+
+// ✅ AI 루틴 생성 엔드포인트
 app.post("/api/routine", async (req, res) => {
   const { height, weight, goal, period } = req.body;
   console.log("📩 루틴 요청 받음:", req.body);
@@ -30,11 +51,12 @@ app.post("/api/routine", async (req, res) => {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // 현재 가장 안정적인 무료/유료 API
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: "당신은 전문 피트니스 트레이너입니다. 사용자의 신체 정보와 목표에 맞는 맞춤 운동 루틴을 생성하세요.",
+            content:
+              "당신은 전문 피트니스 트레이너입니다. 사용자의 신체 정보와 목표에 맞는 맞춤 운동 루틴을 생성하세요.",
           },
           {
             role: "user",
@@ -64,6 +86,7 @@ app.post("/api/routine", async (req, res) => {
   }
 });
 
+// ✅ 서버 실행
 app.listen(PORT, () => {
-  console.log(`🚀 GPT 서버 실행 중: http://localhost:${PORT}`);
+  console.log(`🚀 서버 실행 중: http://localhost:${PORT}`);
 });
